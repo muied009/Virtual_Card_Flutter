@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:visiting_card/models/contact_model.dart';
+import 'package:visiting_card/pages/from_page.dart';
 import 'package:visiting_card/utils/constants.dart';
 
 class ScanPage extends StatefulWidget {
@@ -33,6 +35,10 @@ class _ScanPageState extends State<ScanPage> {
       appBar: AppBar(
         title: const Text("Scan"),
         elevation: 1,
+        actions: [
+          TextButton(onPressed: imagePath.isEmpty ? null : () => _createContactModelFromScannedValues(),
+            child: const Text("NEXT"))
+        ],
       ),
       body: ListView(
         children: [
@@ -126,7 +132,45 @@ class _ScanPageState extends State<ScanPage> {
     }
   }
 
-  _getPropertyValue(String property, String value) {}
+  _getPropertyValue(String property, String value) {
+    switch(property){
+      case ContactProperties.name:
+        name = value;
+        break;
+      case ContactProperties.mobile:
+        mobile = value;
+        break;
+      case ContactProperties.companyName:
+        companyName = value;
+        break;
+      case ContactProperties.designation:
+        designation = value;
+        break;
+      case ContactProperties.email:
+        email = value;
+        break;
+      case ContactProperties.address:
+        address = value;
+        break;
+      case ContactProperties.website:
+        website = value;
+        break;
+    }
+  }
+
+  void _createContactModelFromScannedValues() {
+    final contactModel = ContactModel(
+        name: name,
+        email: email,
+        mobile: mobile,
+      address: address,
+        website: website,
+      companyName: companyName,
+      designation: designation,
+      image: imagePath,
+    );
+    Navigator.pushNamed(context, FormPage.routeName , arguments: contactModel);
+  }
 }
 
 class DropTargetItem extends StatefulWidget {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:visiting_card/models/contact_model.dart';
+import 'package:visiting_card/pages/home_page.dart';
 import 'package:visiting_card/providers/contact_provider.dart';
 
 import '../utils/extensions.dart';
@@ -24,8 +25,22 @@ class _FormPageState extends State<FormPage> {
   final companyNameController = TextEditingController();
   final addressController = TextEditingController();
   final websiteController = TextEditingController();
-  final formKey = GlobalKey<
-      FormState>(); // ei go=lobal key tha dharon korbe form er state k
+  final formKey =
+      GlobalKey<FormState>(); // ei golobal key tha dharon korbe form er state k
+  late ContactModel contactModel;
+
+  @override
+  void didChangeDependencies() {
+    contactModel = ModalRoute.of(context)!.settings.arguments as ContactModel;
+    nameController.text = contactModel.name;
+    mobileController.text = contactModel.mobile;
+    emailController.text = contactModel.email;
+    designationController.text = contactModel.designation;
+    companyNameController.text = contactModel.companyName;
+    addressController.text = contactModel.address;
+    websiteController.text = contactModel.website;
+    super.didChangeDependencies();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,7 +120,8 @@ class _FormPageState extends State<FormPage> {
                 validator: (value) {
                   if (value == null || value.isEmpty) {
                     return "This field must not be empty";
-                  }/*
+                  }
+                  /*
                   if (!RegExp(r"^[0-9]{12}$").hasMatch(value)) {
                     return "Invalid mobile number";
                   }*/
@@ -186,22 +202,22 @@ class _FormPageState extends State<FormPage> {
       ///jate kore oi model class er obj k kaj e lagae map hisebe local db te dhukay dite parbo
       ///map er key guloi hobe column name
 
-      final contact = ContactModel(
-          name: nameController.text,
-          email: emailController.text,
-          mobile: mobileController.text,
-          address: addressController.text,
-          companyName: companyNameController.text,
-          designation: designationController.text,
-          website: websiteController.text,
-      );
+      contactModel.name = nameController.text;
+      contactModel.email = emailController.text;
+      contactModel.mobile = mobileController.text;
+      contactModel.address = addressController.text;
+      contactModel.companyName = companyNameController.text;
+      contactModel.designation = designationController.text;
+      contactModel.website = websiteController.text;
+      contactModel.image = contactModel.image;
+
       //false karon ui update korbona sudu methode call dibo ,,,,,,tai
-      Provider.of<ContactProvider>(context,listen: false)
-      .insertContact(contact)
-      .then((rowId){
-        if(rowId > 0){
+      Provider.of<ContactProvider>(context, listen: false)
+          .insertContact(contactModel)
+          .then((rowId) {
+        if (rowId > 0) {
           showMsg(context, 'Saved');
-          Navigator.pop(context);
+          Navigator.popUntil(context,ModalRoute.withName(HomePage.routeName));//homepage na asa porjonto pop korte thakbe
         }
       });
     }
