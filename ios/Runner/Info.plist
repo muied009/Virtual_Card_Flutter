@@ -11,6 +11,15 @@
     <key>NSMicrophoneUsageDescription</key>
     <string>WE NEED TO ACCESS YOUR MICROPHONE</string>
 
+    <key>LSApplicationQueriesSchemes</key>
+        <array>
+          <string>sms</string>
+          <string>tel</string>
+          <string>mailto</string>
+          <string>http</string>
+          <string>https</string>
+        </array>
+
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>

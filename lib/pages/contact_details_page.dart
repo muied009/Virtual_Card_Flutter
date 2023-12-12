@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'package:visiting_card/providers/contact_provider.dart';
+import 'package:visiting_card/utils/extensions.dart';
 
 class ContactDetailsPage extends StatefulWidget {
   static const String routeName = "/contactDetails";
@@ -44,6 +46,43 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
                         ),
                         ListTile(
                           title: Text(contact.mobile),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(onPressed: (){
+                                _smsContact(contact.mobile);
+                              }, icon: const Icon(Icons.sms)),
+                              IconButton(onPressed: (){
+                                _callContact(contact.mobile);
+                              }, icon: const Icon(Icons.call))
+                            ],
+                          ),
+                        ),
+                        ListTile(
+                          title: Text(contact.email.isEmpty ? "Not-Found" : contact.email),
+                          trailing: const Icon(Icons.email),
+                          onTap: (){
+                            _emailSend(contact.email);
+                          },
+                        ),
+                        ListTile(
+                          title: Text(contact.address.isEmpty ? "Not-Found" : contact.address),
+                          trailing: const Icon(Icons.map),
+                          onTap: (){
+                            _openMap(contact.address);
+                          },
+                        ),
+                        ListTile(
+                          title: Text(contact.companyName.isEmpty ? "Not-Found" : contact.companyName),
+                          subtitle: Text(contact.designation.isEmpty ? "Designation : Not-Found" : contact.designation),
+                          trailing: const Icon(Icons.account_balance),
+                        ),
+                        ListTile(
+                          title: Text(contact.website.isEmpty ? "Not-Found" : contact.website),
+                          trailing: const Icon(Icons.web),
+                          onTap: (){
+                            _openBrowser(contact.website);
+                          },
                         ),
                       ],
                     );
@@ -57,4 +96,28 @@ class _ContactDetailsPageState extends State<ContactDetailsPage> {
       ),
     );
   }
+
+  void _smsContact(String mobile) async {
+    final url = "sms:$mobile";
+    if(await canLaunchUrlString(url)){
+      await launchUrlString(url);
+    }else{
+      showMsg(context, "Can not perform this task");
+    }
+  }
+
+  void _callContact(String mobile) async {
+    final url = "tel:$mobile";
+    if(await canLaunchUrlString(url)){
+    await launchUrlString(url);
+    }else{
+    showMsg(context, "Can not perform this task");
+    }
+  }
+
+  void _emailSend(String email) async{}
+
+  void _openBrowser(String website) async{}
+
+  void _openMap(String address) async{}
 }
