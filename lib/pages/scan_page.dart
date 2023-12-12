@@ -37,7 +37,7 @@ class _ScanPageState extends State<ScanPage> {
           Wrap(
             direction: Axis.horizontal,
             spacing: 10,
-            children: lines.map((line) => Chip(label: Text(line))).toList()
+            children: lines.map((line) => LineItem(line: line)).toList()
           )
         ],
       ),
@@ -69,3 +69,28 @@ class _ScanPageState extends State<ScanPage> {
     }
   }
 }
+
+class LineItem extends StatelessWidget {
+  final String line;
+  const LineItem({super.key, required this.line});
+
+  @override
+  Widget build(BuildContext context) {
+    final GlobalKey _globalKey = GlobalKey();
+    return LongPressDraggable(
+      data: line,
+        dragAnchorStrategy: childDragAnchorStrategy,
+        feedback: Container(
+          key: _globalKey,
+          padding: const EdgeInsets.all(8),
+          decoration: const BoxDecoration(
+            color: Colors.black45,
+          ),
+          child: Text(line,style: Theme.of(context)
+              .textTheme.titleMedium!.copyWith(color: Colors.white),),
+        ),
+      child: Chip(label: Text(line),),
+    );
+  }
+}
+
