@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:visiting_card/pages/contact_details_page.dart';
 import 'package:visiting_card/pages/from_page.dart';
 import 'package:visiting_card/providers/contact_provider.dart';
 
+import '../models/contact_model.dart';
 import '../utils/extensions.dart';
 
 class HomePage extends StatefulWidget {
@@ -96,6 +98,8 @@ class _HomePageState extends State<HomePage> {
                   },
                   direction: DismissDirection.endToStart,
                 child: ListTile(
+                  ///navigator = (context, kun page e jabo, ki niye jabo parameter hisebe)
+                onTap: () => Navigator.pushNamed(context, ContactDetailsPage.routeName,arguments: contact.id),
                   title: Text(contact.name,style: const TextStyle(
                     fontSize: 20,
                     color: Colors.black,
@@ -107,7 +111,9 @@ class _HomePageState extends State<HomePage> {
                         fontWeight: FontWeight.bold
                     ),),
                   trailing: IconButton(
-                    onPressed: (){},
+                    onPressed: (){
+                      provider.updateContactField(contact, tblContactColFavorite);
+                    },
                     icon: Icon(contact.favorite ? Icons.favorite : Icons.favorite_border),
                   ),
                 ),
